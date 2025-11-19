@@ -42,8 +42,6 @@ A clean, responsive, React-based UI where users can:
 - Mobile-friendly UI  
 - Clean minimal design
 
----
 
-## 🗂️ **Folder Structure**
 
 

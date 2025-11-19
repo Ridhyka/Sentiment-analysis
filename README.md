@@ -27,7 +27,7 @@ The project includes:
 ---
 ## Demo Screenshot
 
-![Sentiment Analysis Demo](assets/Screenshot (61).png )
+![Sentiment Analysis Demo](./assets/Screenshot (61).png )
 
 ---
 

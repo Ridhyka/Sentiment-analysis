@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Review Sentiment Analyzer (Demo)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a cleaner UI */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .container {
+            max-width: 800px;
+        }
+        #result-box {
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 flex justify-center items-start min-h-screen">
+    <div class="container w-full bg-white shadow-xl rounded-xl p-6 md:p-10 mt-10">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+            Amazon Review Sentiment Analyzer
+        </h1>
+        <p class="text-md text-indigo-600 font-semibold mb-6">
+            TF-IDF + LinearSVC Model Simulation
+        </p>
+
+        
+
+        <!-- Input Area -->
+        <div class="mb-6">
+            <label for="review-input" class="block text-lg font-bold text-gray-700 mb-2">
+                Enter an Amazon Review:
+            </label>
+            <textarea id="review-input" rows="4" 
+                      placeholder="e.g., 'I absolutely love this product; it exceeded all my expectations!'" 
+                      class="w-full p-4 border-2 border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 shadow-inner resize-none">
+The packaging was destroyed when it arrived, but the headphones themselves are incredible. The sound quality is great!
+</textarea>
+        </div>
+
+        <!-- Action Button -->
+        <div class="flex justify-center mb-8">
+            <button id="analyze-button" 
+                    class="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white font-bold text-lg rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105 active:scale-100 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+                Analyze Sentiment
+            </button>
+        </div>
+
+        <!-- Result Display -->
+        <div class="mt-4">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">
+                Analysis Result
+            </h2>
+            <div id="result-box" 
+                 class="p-6 rounded-lg border-2 border-dashed flex flex-col justify-center items-center text-center transition-all duration-300">
+                <p id="sentiment-output" class="text-xl font-semibold text-gray-500">
+                    Click "Analyze Sentiment" to see the result.
+                </p>
+                <p id="confidence-output" class="text-sm text-gray-500 mt-2 italic">
+                    (Confidence/Simulated Accuracy: N/A)
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Core Sentiment Simulation Logic ---
+        function getSimulatedSentiment(reviewText) {
+            const text = reviewText.toLowerCase();
+            let score = 0;
+
+            // Simple positive keywords (Simulating high TF-IDF scores)
+            const positiveWords = ['excellent', 'amazing', 'great', 'love', 'perfect', 'best', 'good', 'happy', 'incredible', 'satisfied'];
+            // Simple negative keywords
+            const negativeWords = ['terrible', 'worst', 'disappointed', 'poor', 'broke', 'awful', 'bad', 'waste', 'hate', 'damaged'];
+
+            positiveWords.forEach(word => {
+                if (text.includes(word)) score += 1;
+            });
+
+            negativeWords.forEach(word => {
+                if (text.includes(word)) score -= 1;
+            });
+            
+            // Handle common negation (oversimplified simulation of n-gram logic)
+            if (text.includes('not good') || text.includes('not great')) score -= 2;
+
+            if (score > 0) {
+                return { label: 'Positive', color: 'bg-green-100 border-green-500 text-green-700', icon: '👍' };
+            } else if (score < 0) {
+                return { label: 'Negative', color: 'bg-red-100 border-red-500 text-red-700', icon: '👎' };
+            } else {
+                return { label: 'Neutral', color: 'bg-gray-100 border-gray-500 text-gray-700', icon: '😐' };
+            }
+        }
+
+        // --- DOM Interaction ---
+        const analyzeButton = document.getElementById('analyze-button');
+        const reviewInput = document.getElementById('review-input');
+        const resultBox = document.getElementById('result-box');
+        const sentimentOutput = document.getElementById('sentiment-output');
+        const confidenceOutput = document.getElementById('confidence-output');
+
+        analyzeButton.addEventListener('click', () => {
+            const review = reviewInput.value.trim();
+            if (review.length < 5) {
+                sentimentOutput.textContent = "Please enter a longer review to analyze.";
+                resultBox.className = 'p-6 rounded-lg border-2 border-dashed flex flex-col justify-center items-center text-center bg-gray-50 border-gray-400 text-gray-700 transition-all duration-300';
+                confidenceOutput.textContent = '';
+                return;
+            }
+
+            // Simulate loading (optional, but good for UX)
+            analyzeButton.textContent = 'Analyzing...';
+            analyzeButton.disabled = true;
+            
+            setTimeout(() => {
+                const result = getSimulatedSentiment(review);
+
+                // Update UI based on result
+                sentimentOutput.innerHTML = `<span class="text-4xl">${result.icon}</span> <span class="text-3xl font-extrabold ml-3">${result.label}</span>`;
+                confidenceOutput.textContent = `(Simulated high-confidence prediction)`;
+
+                // Apply dynamic styling
+                resultBox.className = `p-6 rounded-lg border-2 border-solid flex flex-col justify-center items-center text-center ${result.color} transition-all duration-300`;
+                
+                // Restore button state
+                analyzeButton.textContent = 'Analyze Sentiment';
+                analyzeButton.disabled = false;
+            }, 500); // Simulate processing time
+        });
+
+        // Run analysis on load for a good first impression
+        document.addEventListener('DOMContentLoaded', () => {
+            analyzeButton.click();
+        });
+    </script>
+</body>
+</html>

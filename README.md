@@ -25,6 +25,12 @@ The project includes:
   - `tfidf_vectorizer.pkl`
 
 ---
+## Demo Screenshot
+
+![Sentiment Analysis Demo](assets/Screenshot (61).png )
+
+---
+
 
 ## 🌐 **Interactive Website**
 A clean, responsive, React-based UI where users can:
